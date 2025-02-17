@@ -1,0 +1,59 @@
+.credits {
+  margin: 1rem;
+  width: calc(100vw - 2rem);
+  max-width: 500px;
+  height: 116px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* Needed for absolute positioning of pseudo-elements */
+}
+
+.credits::before,
+.credits::after {
+  content: "";
+  height: calc(100% - 16px);
+  width: 139px;
+  position: absolute;
+  border: 3px solid white;
+  box-sizing: border-box;
+  margin-top: 16px;
+}
+
+.credits::before {
+  border-right: none;
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+  left: 0;
+  /* Ensures it aligns correctly */
+}
+
+.credits::after {
+  border-left: none;
+  right: 0;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+}
+
+.credits__amount {
+  height: 100%;
+  border-bottom: 3px solid white;
+  margin: 0 14px;
+  font: 48px "Lilita One", sans-serif;
+  text-align: center;
+  color: white;
+  line-height: 68px;
+}
+
+.credits--wide::before,
+.credits--wide::after {
+  width: 123px;
+}
+
+
+
+.hud-title {
+  font: 2rem "Lilita One", sans-serif;
+  text-align: center;
+  color: white;
+}
