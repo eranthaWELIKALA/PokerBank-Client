@@ -16,6 +16,7 @@ export default function Home() {
         setError(null);
 
         try {
+            console.log(`NEXT_PUBLIC_SERVER_URL: ${process.env.NEXT_PUBLIC_SERVER_URL}`);
             const response = await axios.post(
                 `${process.env.NEXT_PUBLIC_SERVER_URL}/api/start-session`, // Server call for session creation
                 {
