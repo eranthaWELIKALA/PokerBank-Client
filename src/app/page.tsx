@@ -24,7 +24,7 @@ export default function Home() {
             );
 
             setSessionCode(response.data.sessionCode); // Example: { sessionCode: "19501" }
-        } catch (_) {
+        } catch {
             setError("Failed to start session");
         } finally {
             setLoading(false);
