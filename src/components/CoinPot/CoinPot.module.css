@@ -49,11 +49,3 @@
 .credits--wide::after {
   width: 123px;
 }
-
-
-
-.hud-title {
-  font: 2rem "Lilita One", sans-serif;
-  text-align: center;
-  color: white;
-}

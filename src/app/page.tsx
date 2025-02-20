@@ -1,67 +1,101 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { io } from "socket.io-client"; // Import socket.io-client
-import CoinPot from "@/components/CoinPot/CoinPot";
-import PointTable from "@/components/PointTable/PointTable";
-import BettingTable from "@/components/BettingTable/BettingTable";
-
-const socket = io("http://localhost:3000"); // Connect to your backend server
+import React, { useState } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation"; // Import the useRouter hook
 
 export default function Home() {
-    const [bet, setBet] = useState(0);
-    const [pot, setPot] = useState(100); // Initial pot value
-    const [pointTable, setPointTable] = useState([
-        { id: 1, name: "Erantha", coins: 10 },
-        { id: 2, name: "Dinushi", coins: 20 },
-        { id: 3, name: "Kavindu", coins: 30 },
-        { id: 4, name: "Shehan", coins: 40 },
-        { id: 5, name: "Rochana", coins: 50 },
-    ]);
-    const [pointLine, setPointLine] = useState<number>(3);
+    const [coinValue, setCoinValue] = useState<number>(100); // Default initial coin value
+    const [sessionCode, setSessionCode] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string | null>(null);
+    const router = useRouter(); // Initialize the router
 
-    // Listen for pot updates
-    useEffect(() => {
-        socket.on("pot-update", (newPotValue: number) => {
-            setPot(newPotValue); // Update the pot when a pot-update event is received
-        });
+    const startSession = async () => {
+        setLoading(true);
+        setError(null);
 
-        // Listen for point-table updates
-        socket.on("point-table-update", (newPointTable: any[]) => {
-            setPointTable(newPointTable); // Update the point table with the new data
-        });
+        try {
+            const response = await axios.post(
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/start-session`, // Server call for session creation
+                {
+                    initialCoins: coinValue,
+                }
+            );
 
-        // Cleanup when the component unmounts
-        return () => {
-            socket.off("pot-update");
-            socket.off("point-table-update");
-        };
-    }, []);
+            setSessionCode(response.data.sessionCode); // Example: { sessionCode: "19501" }
+        } catch (_) {
+            setError("Failed to start session");
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const canEnableBets = true; // Change this based on game logic or user interaction
+    const copyToClipboard = () => {
+        if (sessionCode) {
+            const clientUrl = `${window.location.origin}/${sessionCode}`; // Create the session URL
+            navigator.clipboard.writeText(clientUrl);
+            alert("Session URL copied!");
+        }
+    };
 
-    const placeBet = (amount: number) => {
-        if (canEnableBets) {
-            setBet((prevBet) => prevBet + amount);
-            // Send the bet event to the backend with the selected bet value
-            socket.emit("bet", { amount: bet + amount }); // Send bet to backend
+    const navigateToSession = () => {
+        if (sessionCode) {
+            // Programmatically navigate to the session page
+            router.push(`/${sessionCode}`);
         }
     };
 
     return (
-        <div className="App">
-            <CoinPot coins={pot} />
-            <BettingTable
-                bet={bet}
-                placeBet={placeBet}
-                canEnableBets={canEnableBets}
-            />
-            <PointTable pointTable={pointTable} pointLine={pointLine} />
+        <div
+            className="App"
+            style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+            }}
+        >
+            <h2>Start Poker Session</h2>
 
-            {/* You can add controls to update the pointLine */}
-            <button onClick={() => setPointLine(2)}>
-                Set PayLine to Line 2
+            <label>Enter Initial Coin Value:</label>
+            <input
+                min={100}
+                max={1000}
+                type="number"
+                value={coinValue}
+                onChange={(e) => setCoinValue(Number(e.target.value))}
+            />
+
+            <button onClick={startSession} disabled={loading}>
+                {loading ? "Starting..." : "Start Session"}
             </button>
+
+            {error && <p className="error">{error}</p>}
+
+            {sessionCode && (
+                <div className="component-container">
+                    <div className="credits credits--wide">
+                        <div className="session-code-box">
+                            <p className="hud-title">
+                                Session Code: <span>{sessionCode}</span>
+                            </p>
+                            <button
+                                onClick={copyToClipboard}
+                                className="copy-button"
+                            >
+                                Copy Session Link
+                            </button>
+                            <button
+                                onClick={navigateToSession}
+                                className="navigate-button"
+                            >
+                                Navigate to Session
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

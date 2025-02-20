@@ -5,7 +5,6 @@
   padding: 0 1rem 0.75rem 1rem;
   color: #d0cb67;
   position: relative;
-  /* Needed for absolute positioning */
 }
 
 .point-table__line {
@@ -17,7 +16,6 @@
   font-size: 1rem;
 }
 
-/* Second child styling */
 .point-table__line:nth-child(2) {
   text-align: center;
   background-color: #012a58;
@@ -26,29 +24,24 @@
   height: 2.5rem;
 }
 
-/* Center the child divs of the second row */
 .point-table__line:nth-child(2)>div {
   margin: auto;
 }
 
-/* Add left margin to all divs inside nth-child(2) except the first one */
 .point-table__line:nth-child(2)>div:not(:first-child) {
   margin-left: 2.5rem;
 }
 
-/* Text alignment and color for all lines except nth-child(2) */
 .point-table__line:not(:nth-child(2))>div:not(:first-child) {
   text-align: right;
   color: rgb(250, 250, 222);
 }
 
-/* Name column */
 .point-table__line__name {
   border-left: none;
   padding: 0.4rem;
 }
 
-/* Payment column */
 .point-table__line__coins {
   display: flex;
   flex-direction: column;
@@ -58,12 +51,10 @@
   padding: 5px;
 }
 
-/* Odd rows should have transparent background */
 .point-table__line:nth-child(odd) {
   background-color: transparent;
 }
 
-/* Table borders */
 .point-table::before,
 .point-table::after {
   content: "";
@@ -88,11 +79,4 @@
   border-left: none;
   border-top-right-radius: 1rem;
   border-bottom-right-radius: 1rem;
-}
-
-
-.hud-title {
-  font: 2rem "Lilita One", sans-serif;
-  text-align: center;
-  color: white;
 }

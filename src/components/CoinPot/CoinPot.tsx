@@ -1,5 +1,5 @@
 import React from "react";
-import "./CoinPot.css";
+import styles from "./CoinPot.module.css";
 
 interface CoinPotProps {
     coins: number;
@@ -8,9 +8,9 @@ interface CoinPotProps {
 const CoinPot = ({ coins }: CoinPotProps) => {
     return (
         <div className="component-container">
-            <div className="credits credits--wide">
+            <div className={`${styles.credits} ${styles["credits--wide"]}`}>
                 <div className="hud-title">Pot</div>
-                <div className="credits__amount">{coins}</div>
+                <div className={styles.credits__amount}>{coins}</div>
             </div>
         </div>
     );

@@ -1,47 +1,63 @@
-import React, { useState } from "react";
-import "./BettingTable.css"; // Import CSS for styling
+import React from "react";
+import styles from "./BettingTable.module.css";
 
 type BettingTableProps = {
     bet: number;
-    placeBet: (amount: number) => void;
-    canEnableBets: boolean;
+    action: string | null;
+    currentTotalBet: number | undefined;
+    handleBetValueChange: (amount: number) => number;
+    handleBetActionChange: () => void;
+    canBet: boolean;
 };
 
+const BettingTable = ({
+    bet,
+    action,
+    currentTotalBet,
+    handleBetActionChange,
+    handleBetValueChange,
+    canBet,
+}: BettingTableProps) => {
+    const betIncrementClicked = () => {
+        handleBetValueChange(+5);
+    };
 
-const BettingTable = ({ bet, placeBet, canEnableBets }: BettingTableProps) => {
-    // Function to handle the change in bet by 5 units
-    const handleBetChange = (amount: number) => {
-        if (bet + amount >= 0) {
-            placeBet(amount);
-        }
+    const betDecrementClicked = () => {
+        handleBetValueChange(-5);
     };
 
     return (
         <div className="component-container">
-            <div className="betting-table">
-                <div className="bet">
-                    <div className="hud-title">Bet</div>
-                    <div>
-                        <span className="bet__button">
+            <div className={styles["betting-table"]}>
+                <div className={styles["bet"]}>
+                    <div className="hud-title">
+                        {currentTotalBet ? `Bet ${currentTotalBet}` : `Bet`}
+                    </div>
+                    <div className={styles["betting-components"]}>
+                        <span className={styles["bet__button"]}>
                             <button
                                 type="button"
-                                onClick={() => handleBetChange(-5)} // Decrease bet by 5
-                                disabled={!canEnableBets}
+                                onClick={betDecrementClicked}
+                                disabled={!canBet}
                                 className={
-                                    canEnableBets ? "" : "bet__button--disabled"
+                                    canBet
+                                        ? ""
+                                        : styles["bet__button--disabled"]
                                 }
                             >
                                 -
                             </button>
                         </span>
-                        <div className="bet__amount">{bet}</div>
-                        <span className="bet__button">
+                        <div className={styles["bet__amount"]}>{bet}</div>
+                        <span className={styles["bet__button"]}>
                             <button
                                 type="button"
-                                onClick={() => handleBetChange(5)} // Increase bet by 5
-                                disabled={!canEnableBets}
+                                onClick={betIncrementClicked}
+                                disabled={!canBet}
                                 className={
-                                    canEnableBets ? "" : "bet__button--disabled"
+                                    canBet
+                                        ? ""
+                                        : styles["bet__button--disabled"]
                                 }
                             >
                                 +
@@ -50,14 +66,13 @@ const BettingTable = ({ bet, placeBet, canEnableBets }: BettingTableProps) => {
                     </div>
                 </div>
 
-                {/* New button after the bet div, for Fold or Bet */}
                 <button
-                    className="deal-button"
+                    className={styles["deal-button"]}
                     type="button"
-                    onClick={() => handleBetChange(-5)} // Decrease bet by 5 when clicked
-                    disabled={!canEnableBets}
+                    onClick={handleBetActionChange}
+                    disabled={!action}
                 >
-                    {bet === 0 ? "Fold" : "Bet"}
+                    {action}
                 </button>
             </div>
         </div>

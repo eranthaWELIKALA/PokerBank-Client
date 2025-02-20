@@ -1,38 +1,35 @@
 import React from "react";
-import "./PointTable.css";
+import styles from "./PointTable.module.css";
 
-// Typing the entry object
-interface PayTableEntry {
-    id: number;
+interface PlayerEntry {
+    id: string;
     name: string;
     coins: number;
 }
 
-// Typing the props directly without React.FC
 interface PointTableProps {
-    pointTable: PayTableEntry[];
-    pointLine: number;
+    pointTable: PlayerEntry[];
 }
 
-const PointTable = ({ pointTable, pointLine }: PointTableProps) => {
+const PointTable = ({ pointTable }: PointTableProps) => {
     return (
         <div className="component-container">
-            <div className="point-table">
+            <div className={styles["point-table"]}>
                 <div className="hud-title">Point Table</div>
-                <div className="point-table__line">
-                    <div className="point-table__line__name">Player</div>
-                    <div className="point-table__line__coins">Remaining</div>
+                <div className={styles["point-table__line"]}>
+                    <div className={styles["point-table__line__name"]}>Player</div>
+                    <div className={styles["point-table__line__coins"]}>Remaining</div>
                 </div>
 
                 {pointTable
                     .slice()
                     .reverse()
                     .map((line) => (
-                        <div key={line.id} className="point-table__line">
-                            <div className="point-table__line__name">
+                        <div key={line.id} className={styles["point-table__line"]}>
+                            <div className={styles["point-table__line__name"]}>
                                 {line.name}
                             </div>
-                            <div className="point-table__line__coins">
+                            <div className={styles["point-table__line__coins"]}>
                                 {line.coins}
                             </div>
                         </div>
